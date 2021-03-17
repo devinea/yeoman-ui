@@ -177,7 +177,7 @@ function initialState() {
     toShowPromptMessage: false,
     promptMessageClass: "",
     promptMessageIcon: null,
-    messageMaxLength: 100
+    messageMaxLength: 100,
   };
 }
 
@@ -202,8 +202,12 @@ export default {
       return "Back";
     },
     nextButtonText() {
-      if ((!this.selectGeneratorPromptExists() && this.promptIndex === (_.size(this.promptsInfoToDisplay) - 1)) || 
-        (this.selectGeneratorPromptExists() && this.promptIndex > 0 && this.promptIndex === _.size(this.promptsInfoToDisplay)) ||
+      if (
+        (!this.selectGeneratorPromptExists() &&
+          this.promptIndex === _.size(this.promptsInfoToDisplay) - 1) ||
+        (this.selectGeneratorPromptExists() &&
+          this.promptIndex > 0 &&
+          this.promptIndex === _.size(this.promptsInfoToDisplay)) ||
         this.isWriting
       ) {
         return "Finish";
@@ -351,37 +355,45 @@ export default {
       if (currentPrompt) {
         currentPrompt.answers = answers;
         if (currentPrompt.answers.generator) {
-          this.isToolsSuiteTypeGen = this.isToolsSuiteType(currentPrompt.answers.generator);
+          this.isToolsSuiteTypeGen = this.isToolsSuiteType(
+            currentPrompt.answers.generator
+          );
         }
         if (currentPrompt.status === EVALUATING) {
           currentPrompt.status = undefined;
         }
       }
-
     },
     isToolsSuiteType(genName) {
       const questions = _.compact(_.get(this.currentPrompt, "questions"));
       const generatorQuestion = _.find(questions, (question) => {
         return _.get(question, "name") === "generator";
       });
-      if (generatorQuestion){
+      if (generatorQuestion) {
         const choices = _.compact(_.get(generatorQuestion, "choices"));
-        if (choices){
+        if (choices) {
           const isToolsSuiteGen = _.find(choices, (choice) => {
-            return _.get(choice, "isToolsSuiteType") === true && _.get(choice, "value") === genName;
+            return (
+              _.get(choice, "isToolsSuiteType") === true &&
+              _.get(choice, "value") === genName
+            );
           });
-          return (_.isEmpty(isToolsSuiteGen) === false);
+          return _.isEmpty(isToolsSuiteGen) === false;
         }
       }
       return false;
     },
     selectGeneratorPromptExists() {
       const firstPromptQuestions = _.get(this, "prompts[0].questions", []);
-      return !_.isNil(_.find(firstPromptQuestions, question => {
-        return _.get(question, "name") === "generator" && 
-              _.get(question, "type") === "list" && 
-              _.get(question, "guiType") === "tiles";
-      }));
+      return !_.isNil(
+        _.find(firstPromptQuestions, (question) => {
+          return (
+            _.get(question, "name") === "generator" &&
+            _.get(question, "type") === "list" &&
+            _.get(question, "guiType") === "tiles"
+          );
+        })
+      );
     },
     setPromptList(prompts) {
       let promptIndex = this.promptIndex;
@@ -395,17 +407,17 @@ export default {
 
       // replace all existing prompts except 1st (generator selection) and current prompt
       // The index at which to start changing the array.
-      let startIndex = promptIndex; 
+      let startIndex = promptIndex;
       if (this.selectGeneratorPromptExists()) {
         startIndex = promptIndex + 1;
       }
-      
-      // The number of elements in the array to remove from startIndex
-      const deleteCount = _.size(this.prompts) - promptIndex; 
 
-      let itemsToInsert; 
+      // The number of elements in the array to remove from startIndex
+      const deleteCount = _.size(this.prompts) - promptIndex;
+
+      let itemsToInsert;
       if (this.selectGeneratorPromptExists() || promptIndex === 0) {
-        itemsToInsert = prompts.splice(promptIndex, _.size(prompts));       
+        itemsToInsert = prompts.splice(promptIndex, _.size(prompts));
       } else {
         startIndex = promptIndex + 1;
         itemsToInsert = prompts.splice(startIndex, _.size(prompts));
@@ -467,7 +479,7 @@ export default {
     },
 
     isGeneratorsPrompt() {
-      return (this.promptIndex === 0 && this.selectGeneratorPromptExists());
+      return this.promptIndex === 0 && this.selectGeneratorPromptExists();
     },
 
     async showPrompt(questions, name) {
@@ -486,8 +498,10 @@ export default {
         this.reject = reject;
       });
       if (this.nextButtonText === "Finish" && this.isToolsSuiteTypeGen) {
-        const message = "The generated project will not open in a new workspace.";
-        const image = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxNyIgaGVpZ2h0PSIxNyIgdmlld0JveD0iMCAwIDE3IDE3Ij4NCiAgPGRlZnM+DQogICAgPGNsaXBQYXRoIGlkPSJjbGlwLWluZm9fdmNvZGUiPg0KICAgICAgPHJlY3Qgd2lkdGg9IjE3IiBoZWlnaHQ9IjE3Ii8+DQogICAgPC9jbGlwUGF0aD4NCiAgPC9kZWZzPg0KICA8ZyBpZD0iaW5mb192Y29kZSIgY2xpcC1wYXRoPSJ1cmwoI2NsaXAtaW5mb192Y29kZSkiPg0KICAgIDxnIGlkPSJHcm91cF8zNTQ0IiBkYXRhLW5hbWU9Ikdyb3VwIDM1NDQiPg0KICAgICAgPGcgaWQ9Ikdyb3VwXzM1NDMiIGRhdGEtbmFtZT0iR3JvdXAgMzU0MyI+DQogICAgICAgIDxnIGlkPSJHcm91cF8zNTQyIiBkYXRhLW5hbWU9Ikdyb3VwIDM1NDIiPg0KICAgICAgICAgIDxnIGlkPSJFbGxpcHNlXzU0IiBkYXRhLW5hbWU9IkVsbGlwc2UgNTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmYmFmNyIgc3Ryb2tlLXdpZHRoPSIxLjUiPg0KICAgICAgICAgICAgPGNpcmNsZSBjeD0iOC41IiBjeT0iOC41IiByPSI4LjUiIHN0cm9rZT0ibm9uZSIvPg0KICAgICAgICAgICAgPGNpcmNsZSBjeD0iOC41IiBjeT0iOC41IiByPSI3Ljc1IiBmaWxsPSJub25lIi8+DQogICAgICAgICAgPC9nPg0KICAgICAgICAgIDxwYXRoIGlkPSJQYXRoXzE2NDAiIGRhdGEtbmFtZT0iUGF0aCAxNjQwIiBkPSJNMTg1Mi41LTI3NzkuNzMxdjQuNTA2IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTg0NCAyNzg3Ljc1KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmZiYWY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQogICAgICAgICAgPHBhdGggaWQ9IlBhdGhfMTY0MSIgZGF0YS1uYW1lPSJQYXRoIDE2NDEiIGQ9Ik0xODUyLjUtMjc3NC43MzFoMCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4NDQgMjc4MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmYmFmNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiLz4NCiAgICAgICAgPC9nPg0KICAgICAgPC9nPg0KICAgIDwvZz4NCiAgPC9nPg0KPC9zdmc+DQo=";
+        const message =
+          "The generated project will not open in a new workspace.";
+        const image =
+          "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSIxNyIgaGVpZ2h0PSIxNyIgdmlld0JveD0iMCAwIDE3IDE3Ij4NCiAgPGRlZnM+DQogICAgPGNsaXBQYXRoIGlkPSJjbGlwLWluZm9fdmNvZGUiPg0KICAgICAgPHJlY3Qgd2lkdGg9IjE3IiBoZWlnaHQ9IjE3Ii8+DQogICAgPC9jbGlwUGF0aD4NCiAgPC9kZWZzPg0KICA8ZyBpZD0iaW5mb192Y29kZSIgY2xpcC1wYXRoPSJ1cmwoI2NsaXAtaW5mb192Y29kZSkiPg0KICAgIDxnIGlkPSJHcm91cF8zNTQ0IiBkYXRhLW5hbWU9Ikdyb3VwIDM1NDQiPg0KICAgICAgPGcgaWQ9Ikdyb3VwXzM1NDMiIGRhdGEtbmFtZT0iR3JvdXAgMzU0MyI+DQogICAgICAgIDxnIGlkPSJHcm91cF8zNTQyIiBkYXRhLW5hbWU9Ikdyb3VwIDM1NDIiPg0KICAgICAgICAgIDxnIGlkPSJFbGxpcHNlXzU0IiBkYXRhLW5hbWU9IkVsbGlwc2UgNTQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmYmFmNyIgc3Ryb2tlLXdpZHRoPSIxLjUiPg0KICAgICAgICAgICAgPGNpcmNsZSBjeD0iOC41IiBjeT0iOC41IiByPSI4LjUiIHN0cm9rZT0ibm9uZSIvPg0KICAgICAgICAgICAgPGNpcmNsZSBjeD0iOC41IiBjeT0iOC41IiByPSI3Ljc1IiBmaWxsPSJub25lIi8+DQogICAgICAgICAgPC9nPg0KICAgICAgICAgIDxwYXRoIGlkPSJQYXRoXzE2NDAiIGRhdGEtbmFtZT0iUGF0aCAxNjQwIiBkPSJNMTg1Mi41LTI3NzkuNzMxdjQuNTA2IiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgtMTg0NCAyNzg3Ljc1KSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmZiYWY3IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS13aWR0aD0iMS41Ii8+DQogICAgICAgICAgPHBhdGggaWQ9IlBhdGhfMTY0MSIgZGF0YS1uYW1lPSJQYXRoIDE2NDEiIGQ9Ik0xODUyLjUtMjc3NC43MzFoMCIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoLTE4NDQgMjc4MCkiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmYmFmNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiLz4NCiAgICAgICAgPC9nPg0KICAgICAgPC9nPg0KICAgIDwvZz4NCiAgPC9nPg0KPC9zdmc+DQo=";
         this.showPromptMessage(message, Severity.information, image);
       }
       promise.then(() => {
@@ -508,8 +522,13 @@ export default {
         );
         promptName = _.get(this.messages, "select_generator_name");
       } else {
-        const promptIndex = this.selectGeneratorPromptExists() ? (this.promptIndex - 1) : this.promptIndex;
-        const promptToDisplay = _.get(this.promptsInfoToDisplay, `[${promptIndex}]`);
+        const promptIndex = this.selectGeneratorPromptExists()
+          ? this.promptIndex - 1
+          : this.promptIndex;
+        const promptToDisplay = _.get(
+          this.promptsInfoToDisplay,
+          `[${promptIndex}]`
+        );
         promptDescription = _.get(promptToDisplay, "description", "");
         promptName = _.get(promptToDisplay, "name", name);
       }
@@ -597,7 +616,8 @@ export default {
     async setMessagesAndSaveState() {
       const uiOptions = await this.rpc.invoke("getState");
       this.messages = _.get(uiOptions, "messages");
-      this.isGeneric = _.get(this.messages, "panel_title") === "Template Wizard";
+      this.isGeneric =
+        _.get(this.messages, "panel_title") === "Template Wizard";
       const vscodeApi = this.getVsCodeApi();
       if (vscodeApi) {
         vscodeApi.setState(uiOptions);

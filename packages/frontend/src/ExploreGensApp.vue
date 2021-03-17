@@ -2,21 +2,29 @@
   <v-app id="exploregens" class="exploregens-main explore-generators">
     <div>
       <v-app-bar dense class="pa-0 ma-0 elevation-0">
-        <v-toolbar-title>{{messages.title}}</v-toolbar-title>
+        <v-toolbar-title>{{ messages.title }}</v-toolbar-title>
       </v-app-bar>
     </div>
-    <v-card-text class="pa-2" style="font-size:14px">{{messages.description}}</v-card-text>
+    <v-card-text class="pa-2" style="font-size: 14px">{{
+      messages.description
+    }}</v-card-text>
     <v-expansion-panels
       v-if="isInBAS && isLegalNoteAccepted && ready"
       flat
       class="explore-generators"
     >
       <v-expansion-panel @click="onDisclaimer">
-        <v-expansion-panel-header class="homepage pa-2"><a style="text-decoration:underline">{{disclaimer}}</a></v-expansion-panel-header>
+        <v-expansion-panel-header class="homepage pa-2"
+          ><a style="text-decoration: underline">{{
+            disclaimer
+          }}</a></v-expansion-panel-header
+        >
         <v-expansion-panel-content>
           <v-row>
             <v-col>
-              <v-card-text class="pa-0 ma-0" style="font-size:14px">{{messages.legal_note}}</v-card-text>
+              <v-card-text class="pa-0 ma-0" style="font-size: 14px">{{
+                messages.legal_note
+              }}</v-card-text>
             </v-col>
           </v-row>
         </v-expansion-panel-content>
@@ -49,10 +57,15 @@
       </v-col>
     </v-row>
 
-    <v-row class="explore-generators-search pa-2" v-if="isLegalNoteAccepted && ready">
-      <v-card-title>{{searchResults}}</v-card-title>
+    <v-row
+      class="explore-generators-search pa-2"
+      v-if="isLegalNoteAccepted && ready"
+    >
+      <v-card-title>{{ searchResults }}</v-card-title>
       <v-icon v-if="refineSearch" color="blue">mdi-information-outline</v-icon>
-      <v-card-title class="pa-0 ml-2" v-if="refineSearch">{{messages.refine_search}}</v-card-title>
+      <v-card-title class="pa-0 ml-2" v-if="refineSearch">{{
+        messages.refine_search
+      }}</v-card-title>
     </v-row>
 
     <v-slide-x-transition v-if="isLegalNoteAccepted && ready">
@@ -75,12 +88,14 @@
             dark
             elevation="2"
           >
-            <v-card-title>{{gen.package.name}}</v-card-title>
-            <v-card-subtitle>{{gen.package.version}}</v-card-subtitle>
-            <v-card-text min-height="70" style="overflow-y:auto">{{gen.package.description}}</v-card-text>
+            <v-card-title>{{ gen.package.name }}</v-card-title>
+            <v-card-subtitle>{{ gen.package.version }}</v-card-subtitle>
+            <v-card-text min-height="70" style="overflow-y: auto">{{
+              gen.package.description
+            }}</v-card-text>
             <v-spacer></v-spacer>
             <v-card-text class="homepage">
-              <a :href="gen.package.links.npm">{{messages.more_info}}</a>
+              <a :href="gen.package.links.npm">{{ messages.more_info }}</a>
             </v-card-text>
             <v-card-actions class="pa-4">
               <v-btn
@@ -88,9 +103,14 @@
                 :text="gen.disabledToHandle"
                 :color="gen.color"
                 @click="onAction(gen)"
-              >{{gen.action}}</v-btn>
+                >{{ gen.action }}</v-btn
+              >
             </v-card-actions>
-            <v-progress-linear v-if="gen.disabledToHandle" indeterminate color="primary"></v-progress-linear>
+            <v-progress-linear
+              v-if="gen.disabledToHandle"
+              indeterminate
+              color="primary"
+            ></v-progress-linear>
           </v-card>
         </v-col>
       </v-row>
@@ -98,8 +118,12 @@
     <div v-if="!isLegalNoteAccepted && ready">
       <v-row class="pa-2">
         <v-col>
-          <v-card-text class="pa-0 ma-0" style="font-size:14px">{{messages.legal_note}}</v-card-text>
-          <v-btn class="mt-6" @click="onAcceptLegalNote">{{messages.accept}}</v-btn>
+          <v-card-text class="pa-0 ma-0" style="font-size: 14px">{{
+            messages.legal_note
+          }}</v-card-text>
+          <v-btn class="mt-6" @click="onAcceptLegalNote">{{
+            messages.accept
+          }}</v-btn>
         </v-col>
       </v-row>
     </div>
@@ -127,12 +151,14 @@ export default {
       isInBAS: false,
       isLegalNoteAccepted: true,
       ready: false,
-      disclaimerOpened: false
+      disclaimerOpened: false,
     };
   },
   computed: {
     disclaimer() {
-      return this.disclaimerOpened ? this.messages.hide_disclaimer: this.messages.view_disclaimer;
+      return this.disclaimerOpened
+        ? this.messages.hide_disclaimer
+        : this.messages.view_disclaimer;
     },
     refineSearch() {
       const gensQuantity = _.size(this.gens);
@@ -148,7 +174,7 @@ export default {
     },
     debouncedGenFilterChange() {
       return _.debounce(this.getFilteredGenerators, 200);
-    }
+    },
   },
   methods: {
     onDisclaimer() {
@@ -159,7 +185,8 @@ export default {
         return messages.uninstall;
       } else if (gen.state === "notInstalled") {
         return messages.install;
-      } else { // installing, uninstalling, updating
+      } else {
+        // installing, uninstalling, updating
         return messages[gen.state];
       }
     },
@@ -172,7 +199,7 @@ export default {
     },
     onAction(gen) {
       if (!gen.disabledToHandle) {
-        const action = (gen.state === "installed" ? "uninstall" : "install");
+        const action = gen.state === "installed" ? "uninstall" : "install";
         this.rpc.invoke(action, [gen]);
       }
     },
@@ -186,9 +213,9 @@ export default {
       const recommended = this.recommended === ALL_GENS ? "" : this.recommended;
       const res = await this.rpc.invoke("getFilteredGenerators", [
         this.query,
-        recommended
+        recommended,
       ]);
-      this.gens = _.map(res[0], gen => {
+      this.gens = _.map(res[0], (gen) => {
         gen.action = this.actionName(gen);
         gen.color = this.actionColor(gen);
         return gen;
@@ -209,12 +236,15 @@ export default {
       this.isLegalNoteAccepted = await this.rpc.invoke("acceptLegalNote");
     },
     async updateBeingHandledGenerator(genName, genState) {
-      const gen = _.find(this.gens, gen => {
+      const gen = _.find(this.gens, (gen) => {
         return gen.package.name === genName;
       });
 
       if (gen) {
-        gen.disabledToHandle = _.includes(["uninstalling", "installing", "updating"], genState);
+        gen.disabledToHandle = _.includes(
+          ["uninstalling", "installing", "updating"],
+          genState
+        );
         gen.state = genState;
         gen.action = this.actionName(gen);
         gen.color = this.actionColor(gen);
@@ -231,14 +261,12 @@ export default {
     },
     initRpc(rpc) {
       this.rpc = rpc;
-      const functions = [
-        "updateBeingHandledGenerator"
-      ];
-      _.forEach(functions, funcName => {
+      const functions = ["updateBeingHandledGenerator"];
+      _.forEach(functions, (funcName) => {
         this.rpc.registerMethod({
           func: this[funcName],
           thisArg: this,
-          name: funcName
+          name: funcName,
         });
       });
     },
@@ -249,27 +277,27 @@ export default {
       } else {
         const ws = new WebSocket("ws://127.0.0.1:8082");
         const that = this;
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           ws.onopen = () => {
             that.initRpc(new RpcBrowserWebSockets(ws));
             resolve();
           };
         });
       }
-    }
+    },
   },
   async created() {
     await this.setupRpc();
     await Promise.all([
       await this.setIsLegalNoteAccepted(),
-      await this.setIsInBAS()
+      await this.setIsInBAS(),
     ]);
     await Promise.all([
       this.getRecommendedQuery(),
-      this.getFilteredGenerators()
+      this.getFilteredGenerators(),
     ]);
     this.ready = true;
-  }
+  },
 };
 </script>
 <style scoped>
@@ -324,6 +352,6 @@ a {
   font-size: 14px;
 }
 .explore-generators-cards .v-card__subtitle {
-  color: var(--vscode-foreground, #cccccc) !important; 
+  color: var(--vscode-foreground, #cccccc) !important;
 }
 </style>

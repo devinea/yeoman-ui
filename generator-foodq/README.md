@@ -3,14 +3,17 @@
 ![](screenshot.png)
 
 ## Description
-[yeoman-ui](https://github.com/SAP/yeoman-ui) is a graphical user interface for running Yeoman generators. It runs as a [Visual Studio Code extension](https://code.visualstudio.com/api), or as a standalone web application for *development* purposes.
+
+[yeoman-ui](https://github.com/SAP/yeoman-ui) is a graphical user interface for running Yeoman generators. It runs as a [Visual Studio Code extension](https://code.visualstudio.com/api), or as a standalone web application for _development_ purposes.
 
 This repo contains a sample Yeoman generator that includes different Yeoman capabilities, including different Inquirer [prompt types](https://github.com/SBoudrias/Inquirer.js/blob/master/README.md#prompt-types), [question properties](https://github.com/SBoudrias/Inquirer.js/blob/master/README.md#question).
 
 Specifically, it includes dynamic questions (`message`, `when()`, `validate()`, etc.).
 
 ## Running Locally
+
 In the terminal type:
+
 ```sh
 # install yeoman
 npm install -g yo
@@ -23,11 +26,14 @@ yo foodq
 ```
 
 ## Debugging in VS Code
-Run the *Foodq* launch configuration.
+
+Run the _Foodq_ launch configuration.
 
 ## Best practices
+
 If you write your own generator and you want it to render well in the wizard, follow these guidelines:
-* Ipdate these properties in generator package.json:
+
+- Ipdate these properties in generator package.json:
 
 ```javascript
 {
@@ -38,12 +44,12 @@ If you write your own generator and you want it to render well in the wizard, fo
 }
 ```
 
-* Group several questions into a single prompt – all questions in the same prompt will render as a single wizard step.
-* You can guide the user by showing the prompts in advance. To do so, follow these guidelines:
+- Group several questions into a single prompt – all questions in the same prompt will render as a single wizard step.
+- You can guide the user by showing the prompts in advance. To do so, follow these guidelines:
 
 **In main generator**
 
-    1. add dependency to yeoman-ui-types in generator package.json: 
+    1. add dependency to yeoman-ui-types in generator package.json:
 
 ```javascript
   "dependencies": {
@@ -57,8 +63,6 @@ If you write your own generator and you want it to render well in the wizard, fo
     4. save the propmpts in a variable
 
     See example: https://github.com/SAP/yeoman-ui/blob/master/generator-foodq/generators/app/index.js
-
-
 
 ```javascript
 module.exports = class extends Generator {
@@ -79,8 +83,7 @@ module.exports = class extends Generator {
     this.prompts = new types.Prompts(prompts); // save the propmpts in a variable
   }
   ...
-  ```
-
+```
 
 **In each sub-generator**
 
@@ -97,7 +100,7 @@ module.exports = class extends Generator {
     this.prompts = opts.prompts; // get list of all parent prompts
     this.parentPromptsQuantity = this.prompts.size(); // save initial quantity of parent promts
     // create all dynamic prompts (name and description only)
-    this.dynamicAddressPrompt = {name: "Dynamic Prompt Name", description: "Dynamic Prompt N Description"}; 
+    this.dynamicAddressPrompt = {name: "Dynamic Prompt Name", description: "Dynamic Prompt N Description"};
 
     const prompts = [
       {name: "First SubGen Prompt Name", description: "First SubGen Prompt Description"},
@@ -114,8 +117,7 @@ module.exports = class extends Generator {
 
     See example: https://github.com/SAP/yeoman-ui/blob/master/generator-foodq/generators/app2/index.js
 
-
-* Update the target folder (your project root path) in the 'configuring()' method 
+- Update the target folder (your project root path) in the 'configuring()' method
 
 ```javascript
 configuring() {
@@ -123,4 +125,4 @@ configuring() {
 }
 ```
 
-* Place a `yeoman.png` file in the same location as your `package.json` file, and Yeoman UI will show it when it shows the user the list of all available generators. 
+- Place a `yeoman.png` file in the same location as your `package.json` file, and Yeoman UI will show it when it shows the user the list of all available generators.

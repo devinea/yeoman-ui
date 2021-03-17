@@ -9,11 +9,11 @@ if (!_.isEmpty(pagePath)) {
 
 module.exports = {
   runtimeCompiler: true,
-  publicPath: (_.isEmpty(pagePath) ? path.join(".") : path.join(".", pagePath)),
+  publicPath: _.isEmpty(pagePath) ? path.join(".") : path.join(".", pagePath),
   transpileDependencies: ["vuetify"],
   productionSourceMap: false,
   configureWebpack: {
-    devtool: 'source-map'
+    devtool: "source-map",
   },
   pages: {
     index: {
@@ -25,7 +25,7 @@ module.exports = {
       filename: INDEX_HTML,
       // chunks to include on this page, by default includes
       // extracted common chunks and vendor chunks.
-      chunks: ['chunk-vendors', 'chunk-common', 'index']
+      chunks: ["chunk-vendors", "chunk-common", "index"],
     },
     exploreGensIndex: {
       // entry for the page
@@ -33,10 +33,13 @@ module.exports = {
       // the source template
       template: path.join("public", path.join("exploregens", INDEX_HTML)),
       // output as dist/exploregens/index.html
-      filename: (pagePath === "exploregens" ? INDEX_HTML : path.join("exploregens", INDEX_HTML)),
+      filename:
+        pagePath === "exploregens"
+          ? INDEX_HTML
+          : path.join("exploregens", INDEX_HTML),
       // chunks to include on this page, by default includes
       // extracted common chunks and vendor chunks.
-      chunks: ['chunk-vendors', 'chunk-common', 'exploreGensIndex']
-    }
-  }
+      chunks: ["chunk-vendors", "chunk-common", "exploreGensIndex"],
+    },
+  },
 };

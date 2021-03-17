@@ -1,12 +1,16 @@
 <template>
   <div>
     <v-app-bar class="elevation-0">
-      <v-toolbar-title>{{headerTitle}}</v-toolbar-title>
+      <v-toolbar-title>{{ headerTitle }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="isGeneric" text x-small color="primary" @click="openExploreGenerators">
-        <v-card-text>
-          Explore and Install Generators... 
-        </v-card-text>
+      <v-btn
+        v-if="isGeneric"
+        text
+        x-small
+        color="primary"
+        @click="openExploreGenerators"
+      >
+        <v-card-text> Explore and Install Generators... </v-card-text>
       </v-btn>
       <v-btn v-if="!isInVsCode" class="ma-2" icon @click="collapseOutput">
         <v-card-text>
@@ -28,8 +32,8 @@ export default {
     },
     openExploreGenerators() {
       this.rpc.invoke("exploreGenerators", [{}]);
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

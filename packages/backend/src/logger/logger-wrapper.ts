@@ -1,8 +1,20 @@
 import * as vscode from "vscode"; // NOSONAR
-import { getExtensionLogger, getExtensionLoggerOpts, IChildLogger, IVSCodeExtLogger, LogLevel } from "@vscode-logging/logger";
-import { listenToLogSettingsChanges, logLoggerDetails } from "./settings-changes-handler";
+import {
+  getExtensionLogger,
+  getExtensionLoggerOpts,
+  IChildLogger,
+  IVSCodeExtLogger,
+  LogLevel,
+} from "@vscode-logging/logger";
+import {
+  listenToLogSettingsChanges,
+  logLoggerDetails,
+} from "./settings-changes-handler";
 // import {resolve} from "path";
-import { getLoggingLevelSetting, getSourceLocationTrackingSetting} from "./settings";
+import {
+  getLoggingLevelSetting,
+  getSourceLocationTrackingSetting,
+} from "./settings";
 
 // const PACKAGE_JSON = "package.json";
 const YEOMAN_UI_LOGGER_NAME = "yeomanui";
@@ -14,7 +26,8 @@ const WEBVIEW_RPC_LOGGER_NAME = "Webview Rpc";
  * implementation.
  */
 
-export const ERROR_LOGGER_NOT_INITIALIZED = 'Logger has not yet been initialized!';
+export const ERROR_LOGGER_NOT_INITIALIZED =
+  "Logger has not yet been initialized!";
 
 /**
  * @type {IVSCodeExtLogger}
@@ -22,7 +35,7 @@ export const ERROR_LOGGER_NOT_INITIALIZED = 'Logger has not yet been initialized
 let logger: any;
 
 function isInitialized(): boolean {
-  return (logger !== undefined ) ? true : false;
+  return logger !== undefined ? true : false;
 }
 
 /**
@@ -39,40 +52,46 @@ export function getLogger(): IVSCodeExtLogger {
 }
 
 export function getClassLogger(className: string): IChildLogger {
-	return getLogger().getChildLogger({label:className});
+  return getLogger().getChildLogger({ label: className });
 }
 
 export function getYeomanUILibraryLogger(): IChildLogger {
-	return getLibraryLogger(YEOMAN_UI_LOGGER_NAME);
+  return getLibraryLogger(YEOMAN_UI_LOGGER_NAME);
 }
 
 export function getWebviewRpcLibraryLogger(): IChildLogger {
-	return getLibraryLogger(WEBVIEW_RPC_LOGGER_NAME);
+  return getLibraryLogger(WEBVIEW_RPC_LOGGER_NAME);
 }
 
 function getLibraryLogger(libraryName: string): IChildLogger {
-	return getLogger().getChildLogger({label:libraryName});
+  return getLogger().getChildLogger({ label: libraryName });
 }
 
-export function createExtensionLoggerAndSubscribeToLogSettingsChanges(context: vscode.ExtensionContext) {
-	createExtensionLogger(context);
-	// Subscribe to Logger settings changes.
-	listenToLogSettingsChanges(context);	
+export function createExtensionLoggerAndSubscribeToLogSettingsChanges(
+  context: vscode.ExtensionContext
+) {
+  createExtensionLogger(context);
+  // Subscribe to Logger settings changes.
+  listenToLogSettingsChanges(context);
 }
 
 export function getConsoleWarnLogger(): IChildLogger {
-    const consoleLog =  (msg: string, ...args: any[]): void => { console.log(msg, args); };
-      const noopLog = () => {};
-      const warningLogger = {
-        fatal: consoleLog,
-        error: consoleLog,
-        warn: consoleLog,
-        info: noopLog,
-        debug: noopLog,
-        trace: noopLog,
-        getChildLogger: () => { return warningLogger; }
-	  };
-	  return warningLogger;
+  const consoleLog = (msg: string, ...args: any[]): void => {
+    console.log(msg, args);
+  };
+  const noopLog = () => {};
+  const warningLogger = {
+    fatal: consoleLog,
+    error: consoleLog,
+    warn: consoleLog,
+    info: noopLog,
+    debug: noopLog,
+    trace: noopLog,
+    getChildLogger: () => {
+      return warningLogger;
+    },
+  };
+  return warningLogger;
 }
 
 /**
@@ -84,24 +103,24 @@ function initLoggerWrapper(newLogger: any) {
 }
 
 function createExtensionLogger(context: vscode.ExtensionContext) {
-	const contextLogPath = context.logPath;
-	const logLevelSetting: LogLevel = getLoggingLevelSetting();
-	const sourceLocationTrackingSettings: boolean = getSourceLocationTrackingSetting();
-	const logOutputChannel = vscode.window.createOutputChannel(YEOMAN_UI);
+  const contextLogPath = context.logPath;
+  const logLevelSetting: LogLevel = getLoggingLevelSetting();
+  const sourceLocationTrackingSettings: boolean = getSourceLocationTrackingSetting();
+  const logOutputChannel = vscode.window.createOutputChannel(YEOMAN_UI);
 
-	//TODO:  const meta = require(resolve(context.extensionPath, PACKAGE_JSON));
-	const extensionLoggerOpts: getExtensionLoggerOpts = {
-		extName: YEOMAN_UI,
-		level: logLevelSetting,
-		logPath: contextLogPath,
-		logOutputChannel: logOutputChannel,
-		sourceLocationTracking: sourceLocationTrackingSettings,
-		logConsole: true
-	};
+  //TODO:  const meta = require(resolve(context.extensionPath, PACKAGE_JSON));
+  const extensionLoggerOpts: getExtensionLoggerOpts = {
+    extName: YEOMAN_UI,
+    level: logLevelSetting,
+    logPath: contextLogPath,
+    logOutputChannel: logOutputChannel,
+    sourceLocationTracking: sourceLocationTrackingSettings,
+    logConsole: true,
+  };
 
-	// The Logger must first be initialized before any logging commands may be invoked.
-	const extensionLogger = getExtensionLogger(extensionLoggerOpts);
-	// Update the logger-wrapper with a reference to the extLogger.
-	initLoggerWrapper(extensionLogger);
-	logLoggerDetails(context, logLevelSetting);
+  // The Logger must first be initialized before any logging commands may be invoked.
+  const extensionLogger = getExtensionLogger(extensionLoggerOpts);
+  // Update the logger-wrapper with a reference to the extLogger.
+  initLoggerWrapper(extensionLogger);
+  logLoggerDetails(context, logLevelSetting);
 }
