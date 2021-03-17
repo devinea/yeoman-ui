@@ -4,6 +4,12 @@
   "workspaces": {
     "packages": [
       "packages/*"
+    ],
+    "nohoist": [
+      "**/@vue", "**/@vue/**",
+      "**/vue-cli-plugin-vuetify", "**/vue-cli-plugin-vuetify/**",
+      "**/vuetify-loader", "**/vuetify-loader/**",
+      "**/vue-jest", "**/vue-jest/**"
     ]
   },
   "scripts": {
