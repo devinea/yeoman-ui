@@ -12,7 +12,8 @@
     "build": "vue-cli-service build",
     "build-dev": "vue-cli-service build --mode development",
     "lint": "vue-cli-service lint",
-    "test": "vue-cli-service test:unit"
+    "test": "vue-cli-service test:unit",
+    "coverage": "vue-cli-service test:unit"
   },
   "dependencies": {
     "@mdi/font": "5.5.55",
