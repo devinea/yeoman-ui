@@ -2,7 +2,7 @@
 	"name": "@sap-devx/yeoman-ui-types",
 	"displayName": "yeoman-ui-types",
 	"description": "Yeoman-UI prompt types",
-	"version": "1.0.2",
+	"version": "1.1.60",
 	"author": "SAP SE",
 	"publisher": "SAP",
 	"license": "Apache-2.0",
@@ -10,13 +10,14 @@
 		"type": "git",
 		"url": "https://github.com/SAP/yeoman-ui.git"
 	},
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"main": "dist/src/index.js",
+	"types": "dist/src/index.d.ts",
 	"scripts": {
-		"compile": "tsc -p ./",
+		"clean": "rimraf ./coverage ./nyc_output ./dist",
+		"compile": "tsc",
 		"watch": "tsc -watch -p ./"
 	},
-	"dependencies": {
-		"typescript": "4.0.3"
-	}
+  "publishConfig": {
+    "access": "public"
+  }
 }
