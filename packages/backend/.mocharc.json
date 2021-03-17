@@ -3,6 +3,6 @@
         "ts-node/register/transpile-only",
         "source-map-support/register"
     ],
-    "recursive": ["tests/**/*.spec.ts"],
+    "recursive": ["test/**/*.spec.ts"],
     "timeout": 5000
 }

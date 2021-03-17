@@ -170,7 +170,7 @@
 		"compile": "tsc",
 		"compile:watch": "tsc -watch",
 		"package": "vsce package .",
-		"test": "nyc mocha -p tsconfig.json",
+		"test": "mocha",
 		"ws:run": "node ./out/src/webSocketServer/index.js",
 		"ws:egRun": "node ./out/src/webSocketServer/exploreGensIndex.js",
 		"lint": "eslint . --ext .ts,.tsx --cache",
