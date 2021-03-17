@@ -1,9 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-		"lib": [
-			"es6"
-		],
 		"listEmittedFiles": false,
 		"listFiles": false,
 		"noFallthroughCasesInSwitch": true,

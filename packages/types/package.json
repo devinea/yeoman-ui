@@ -15,7 +15,7 @@
 	"scripts": {
 		"clean": "rimraf ./coverage ./nyc_output ./dist",
 		"compile": "tsc",
-		"watch": "tsc -watch -p ./"
+		"compile:watch": "tsc -watch"
 	},
   "publishConfig": {
     "access": "public"

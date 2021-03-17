@@ -168,7 +168,7 @@
 		"webpack-prod": "webpack --mode production",
 		"clean": "rimraf ./dist *.vsix", 
 		"compile": "tsc",
-		"watch": "tsc -watch -p ./",
+		"compile:watch": "tsc -watch",
 		"package": "vsce package .",
 		"test": "nyc mocha -p tsconfig.json",
 		"ws:run": "node ./out/src/webSocketServer/index.js",
