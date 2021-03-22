@@ -67,7 +67,10 @@ export class YeomanUIPanel extends AbstractWebviewPanel {
 		this.messages = _.assign({}, backendMessages, _.get(uiOptions, "messages", {}));
 		const filter = GeneratorFilter.create(_.get(uiOptions, "filter"));
 		const generator = _.get(uiOptions, "generator");
-		const gensMetaPromise = YeomanUIPanel.getGensMeta();
+		let meta: any = _.get(uiOptions, "meta") || {};
+		const gensMetaPromise = YeomanUIPanel.getGensMeta().then((result)=>{
+			return meta ? _.merge(result, meta): result;
+		});
 
 		this.rpc = new RpcExtension(this.webViewPanel.webview, getWebviewRpcLibraryLogger());
 		this.output.setChannelName(`${YeomanUIPanel.YEOMAN_UI}.${this.messages.channel_name}`);
