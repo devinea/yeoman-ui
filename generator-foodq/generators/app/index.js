@@ -233,6 +233,7 @@ module.exports = class extends Generator {
       {
         when: async (response) => {
           if (_.isNil(this._getOption("beers"))) {
+            // eslint-disable-next-line no-undef
             return new Promise((resolve) => {
               setTimeout(() => {
                 resolve(this._getAnswer("hungry", response));

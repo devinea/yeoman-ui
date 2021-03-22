@@ -107,7 +107,7 @@ export class YeomanUI {
     this.setCwd(outputPath);
     this.gensMetaPromise = _.get(uiOptions, "gensMetaPromise");
     this.typesMap = new Map();
-    this.generaorsToIgnoreArray = new Array();
+    this.generaorsToIgnoreArray = [];
     this.forceNewWorkspace = false;
   }
 
@@ -544,7 +544,7 @@ export class YeomanUI {
     const ignoreGen: boolean = this.generaorsToIgnoreArray.includes(
       generatorName
     );
-    let selectedWorkspace: string =
+    const selectedWorkspace: string =
       type === "files" || type === "module" || ignoreGen
         ? this.uiOptions.messages.create_and_close
         : this.forceNewWorkspace
@@ -716,7 +716,7 @@ export class YeomanUI {
       filter.categories,
       genFilter.categories
     );
-    let type = _.includes(genFilter.types, GeneratorType.project)
+    const type = _.includes(genFilter.types, GeneratorType.project)
       ? "project"
       : _.includes(genFilter.types, GeneratorType.module)
       ? "module"
